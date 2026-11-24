@@ -47,6 +47,14 @@ def main() -> int:
     path = os.path.join(out_dir, "entry.txt")
     with open(path, "w", encoding="utf-8") as f:
         f.write(ENTRY)
+    # Read back what was written and verify it is exactly the entry:
+    # a truncated or altered write must fail loudly instead of
+    # silently submitting a different line to the gate.
+    with open(path, encoding="utf-8") as f:
+        written = f.read()
+    if written != ENTRY:
+        print("written entry differs from ENTRY", file=sys.stderr)
+        return 1
     print(f"wrote {len(ENTRY)} characters to {path}")
     return 0
 
